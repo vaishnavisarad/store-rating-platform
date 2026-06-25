@@ -9,10 +9,15 @@ dotenv.config();
 
 const app = express();
 const adminRoutes = require("./routes/adminRoutes");
+const authRoutes = require("./routes/authRoutes");
+const userRoutes =require("./routes/userRoutes");
+
 
 app.use(cors());
 app.use(express.json());
+app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/user",userRoutes);
 
 app.get("/", (req, res) => {
   res.send("Store Rating API Running...");
