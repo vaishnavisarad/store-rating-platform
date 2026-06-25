@@ -30,7 +30,7 @@ exports.getStores = async (
     LEFT JOIN ratings r
     ON s.id = r.store_id
 
-    WHERE 1=1
+    
   `;
 
   const values = [userId];
@@ -160,28 +160,27 @@ exports.getStoreByOwner = async (ownerId) => {
   return rows[0];
 };
 
-/**
- * Average Rating of Owner Store
- */
 exports.getAverageRating = async (ownerId) => {
   const [rows] = await db.query(
     `
     SELECT
       s.id,
       s.name,
-      ROUND(AVG(r.rating),2) AS average_rating,
+      ROUND(IFNULL(AVG(r.rating),0),2) AS average_rating,
       COUNT(r.id) AS total_ratings
     FROM stores s
     LEFT JOIN ratings r
       ON s.id = r.store_id
     WHERE s.owner_id = ?
-    GROUP BY s.id
+    GROUP BY s.id, s.name
     `,
     [ownerId]
   );
 
-  return rows[0];
+  return rows;
 };
+
+
 
 /**
  * Users Who Rated Store
@@ -190,9 +189,10 @@ exports.getStoreRatings = async (ownerId) => {
   const [rows] = await db.query(
     `
     SELECT
-      u.id,
+      r.id,
       u.name,
       u.email,
+      s.name AS store_name,
       r.rating,
       r.created_at
     FROM ratings r

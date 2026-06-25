@@ -120,6 +120,35 @@ exports.updateRating = async (req, res) => {
  * Store Owner Dashboard
  * Average Rating + Store Info
  */
+// exports.getOwnerDashboard = async (req, res) => {
+//   try {
+//     const ownerId = req.user.id;
+
+//     const dashboard =
+//       await userModel.getAverageRating(ownerId);
+
+//     if (!dashboard) {
+//       return res.status(404).json({
+//         success: false,
+//         message:
+//           "No store assigned to this owner",
+//       });
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       data: dashboard,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+
+
 exports.getOwnerDashboard = async (req, res) => {
   try {
     const ownerId = req.user.id;
@@ -127,16 +156,16 @@ exports.getOwnerDashboard = async (req, res) => {
     const dashboard =
       await userModel.getAverageRating(ownerId);
 
-    if (!dashboard) {
+    if (!dashboard.length) {
       return res.status(404).json({
         success: false,
-        message:
-          "No store assigned to this owner",
+        message: "No store assigned to this owner",
       });
     }
 
     res.status(200).json({
       success: true,
+      totalStores: dashboard.length,
       data: dashboard,
     });
   } catch (error) {
@@ -146,7 +175,6 @@ exports.getOwnerDashboard = async (req, res) => {
     });
   }
 };
-
 /**
  * Users Who Submitted Ratings
  */
