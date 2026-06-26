@@ -30,6 +30,8 @@ exports.getStores = async (
     LEFT JOIN ratings r
     ON s.id = r.store_id
 
+    WHERE 1=1
+
     
   `;
 
